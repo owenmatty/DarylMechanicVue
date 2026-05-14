@@ -1,0 +1,131 @@
+:root {
+  --bg: #0f1115;
+  --surface: #171b23;
+  --surface-2: #212833;
+  --text: #f6f7fb;
+  --muted: #adb4c2;
+  --accent: #ff7a18;
+  --accent-strong: #ff5e00;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.container {
+  width: min(1120px, 92%);
+  margin-inline: auto;
+}
+
+.site-shell { padding-bottom: 3rem; }
+
+.hero {
+  min-height: 85vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-image: linear-gradient(rgba(9, 11, 14, 0.72), rgba(9, 11, 14, 0.72)),
+    url('https://images.unsplash.com/photo-1486006920555-c77dcf18193c?auto=format&fit=crop&w=1600&q=80');
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 5rem 0;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  margin: 0.4rem 0 1rem;
+  max-width: 14ch;
+}
+
+.subtext {
+  color: var(--muted);
+  max-width: 60ch;
+  line-height: 1.6;
+}
+
+.eyebrow {
+  color: var(--accent);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  text-decoration: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.btn-primary { background: var(--accent); color: #111; }
+.btn-primary:hover { background: var(--accent-strong); }
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.section { padding: 4rem 0 1rem; }
+.section-head h2 { margin-top: 0.25rem; }
+
+.service-grid,
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.card {
+  background: linear-gradient(160deg, var(--surface), var(--surface-2));
+  padding: 1.3rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.card p { color: var(--muted); line-height: 1.55; }
+.quote { color: var(--text) !important; font-size: 1.02rem; }
+.author { font-size: 0.9rem; }
+
+.cta-card {
+  background: linear-gradient(135deg, #1b202a, #252f3f);
+  border: 1px solid rgba(255, 122, 24, 0.4);
+  border-radius: 1rem;
+  padding: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cta-card a { color: var(--accent); }
+
+@media (max-width: 900px) {
+  .service-grid,
+  .testimonial-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .service-grid,
+  .testimonial-grid { grid-template-columns: 1fr; }
+  .cta-card { flex-direction: column; align-items: flex-start; }
+}

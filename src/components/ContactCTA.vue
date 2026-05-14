@@ -51,3 +51,42 @@ async function submitEnquiry() {
   window.location.href = data.whatsappUrl;
 }
 </script>
+<style scoped>
+
+.contact-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.contact-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.contact-form textarea,
+.contact-form input {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+}
+
+.contact-form button {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+
+  .contact-form {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-form button {
+    grid-column: span 1;
+  }
+}
+
+</style>

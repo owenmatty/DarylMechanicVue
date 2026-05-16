@@ -1,29 +1,63 @@
 <template>
   <section id="contact" class="section container">
     <div class="cta-card">
+
       <div>
         <p class="eyebrow">Ready to Roll?</p>
+
         <h2>Schedule Your Service Today</h2>
-        <p>Send your vehicle details and we’ll reply on WhatsApp.</p>
+
+        <p>
+          Send your vehicle details and we’ll reply on WhatsApp.
+        </p>
       </div>
 
       <form class="contact-form" @submit.prevent="submitEnquiry">
-        <input v-model="form.reg" placeholder="Car reg" required />
-        <input v-model="form.makeModel" placeholder="Make / model" required />
-        <textarea v-model="form.issue" placeholder="What’s the issue?" required />
+
+        <!-- REG -->
+        <input v-model="form.reg" placeholder="Car reg" @blur="lookupReg" class="reg-input" required />
+
+        <!-- VEHICLE -->
+        <input v-model="form.makeModel" placeholder="Make / model"
+          :readonly="!vehicleLookupFailed && !!form.makeModel" />
+
+        <!-- LOOKUP STATUS -->
+        <p v-if="loadingVehicle" class="lookup-status">
+          Looking up vehicle...
+        </p>
+
+        <p v-if="vehicleLookupFailed" class="lookup-error">
+          Vehicle lookup failed. Please enter manually.
+        </p>
+
+        <!-- ISSUE -->
+        <textarea v-model="form.issue" placeholder="What’s the issue?" required></textarea>
+
+        <!-- POSTCODE -->
         <input v-model="form.postcode" placeholder="Postcode" required />
+
+        <!-- DATE -->
         <input v-model="form.preferredDate" placeholder="Preferred date/time" />
 
-        <button class="btn btn-primary" type="submit">
-          Message on WhatsApp
+        <!-- SUBMIT -->
+        <button class="btn btn-primary" type="submit" :disabled="loading">
+          {{ loading ? "Loading..." : "Message on WhatsApp" }}
         </button>
+
       </form>
+
     </div>
   </section>
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
+
+const loading = ref(false);
+
+const loadingVehicle = ref(false);
+
+const vehicleLookupFailed = ref(false);
 
 const form = reactive({
   reg: "",
@@ -33,26 +67,98 @@ const form = reactive({
   preferredDate: ""
 });
 
-async function submitEnquiry() {
-  const res = await fetch("/api/enquiry", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(form)
-  });
+async function lookupReg() {
 
-  if (!res.ok) {
-    alert("Something went wrong. Please call or WhatsApp directly.");
-    return;
+  if (!form.reg) return;
+
+  loadingVehicle.value = true;
+
+  vehicleLookupFailed.value = false;
+
+  try {
+
+    const res = await fetch("/api/lookup-reg", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        reg: form.reg
+      })
+    });
+
+    if (!res.ok) {
+
+      vehicleLookupFailed.value = true;
+
+      return;
+    }
+
+    const data = await res.json();
+
+    form.makeModel = data.makeModel;
+
+  } catch (err) {
+
+    console.error(err);
+
+    vehicleLookupFailed.value = true;
+
+  } finally {
+
+    loadingVehicle.value = false;
   }
+}
 
-  const data = await res.json();
-  window.location.href = data.whatsappUrl;
+async function submitEnquiry() {
+
+  loading.value = true;
+
+  try {
+
+    // Clean inputs
+    form.reg = form.reg.trim();
+    form.issue = form.issue.trim();
+    form.postcode = form.postcode.trim();
+    form.preferredDate = form.preferredDate.trim();
+
+    const res = await fetch("/api/enquiry", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(form)
+    });
+
+    if (!res.ok) {
+
+      alert(
+        "Something went wrong. Please call or WhatsApp directly."
+      );
+
+      return;
+    }
+
+    const data = await res.json();
+
+    window.location.href = data.whatsappUrl;
+
+  } catch (err) {
+
+    console.error(err);
+
+    alert(
+      "Something went wrong. Please call or WhatsApp directly."
+    );
+
+  } finally {
+
+    loading.value = false;
+  }
 }
 </script>
-<style scoped>
 
+<style scoped>
 .contact-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -61,8 +167,9 @@ async function submitEnquiry() {
 }
 
 .contact-form textarea {
-  min-height: 100px;
+  min-height: 120px;
   resize: vertical;
+  grid-column: span 2;
 }
 
 .contact-form textarea,
@@ -72,10 +179,29 @@ async function submitEnquiry() {
   border-radius: 8px;
   border: none;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
 .contact-form button {
   grid-column: span 2;
+}
+
+.reg-input {
+  text-transform: uppercase;
+}
+
+.lookup-status {
+  grid-column: span 2;
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.lookup-error {
+  grid-column: span 2;
+  margin: 0;
+  font-size: 0.9rem;
+  color: #ffb3b3;
 }
 
 @media (max-width: 768px) {
@@ -84,9 +210,11 @@ async function submitEnquiry() {
     grid-template-columns: 1fr;
   }
 
-  .contact-form button {
+  .contact-form textarea,
+  .contact-form button,
+  .lookup-status,
+  .lookup-error {
     grid-column: span 1;
   }
 }
-
 </style>

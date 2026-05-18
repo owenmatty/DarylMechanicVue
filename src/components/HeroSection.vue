@@ -3,7 +3,7 @@
     <div class="overlay"></div>
     <div class="container hero-content">
       <p class="eyebrow">Trusted Mobile Mechanic In East Sussex</p>
-      <h1>D.S Mobile Mechanic</h1>
+      <h1>D S Mobile Mechanic</h1>
 
 <p class="hero-location">
   Mobile Repairs Across Bexhill, Hastings & Eastbourne

@@ -80,7 +80,7 @@ async function lookupReg() {
 
   try {
 
-    const res = await fetch("/api/lookup-reg", {
+    const res = await fetch("/api/lookupReg", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

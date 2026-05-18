@@ -3,13 +3,20 @@
     <div class="cta-card">
 
       <div>
-        <p class="eyebrow">Ready to Roll?</p>
+        <div>
+  <p class="eyebrow">Ready to Roll?</p>
 
-        <h2>Schedule Your Service Today</h2>
+  <h2>Schedule Your Service Today</h2>
 
-        <p>
-          Send your vehicle details and we’ll reply on WhatsApp.
-        </p>
+  <p>
+    Send your vehicle details and we’ll contact you on WhatsApp to arrange a booking.
+  </p>
+
+  <p class="contact-direct">
+    Or call us directly on
+    <a href="tel:077777777">07777 77777</a>
+  </p>
+</div>
       </div>
 
       <form class="contact-form" @submit.prevent="submitEnquiry">
@@ -36,9 +43,6 @@
         <!-- POSTCODE -->
         <input v-model="form.postcode" placeholder="Postcode" required />
 
-        <!-- DATE -->
-        <input v-model="form.preferredDate" placeholder="Preferred date/time" />
-
         <!-- SUBMIT -->
         <button class="btn btn-primary" type="submit" :disabled="loading">
           {{ loading ? "Loading..." : "Message on WhatsApp" }}
@@ -64,7 +68,6 @@ const form = reactive({
   makeModel: "",
   issue: "",
   postcode: "",
-  preferredDate: ""
 });
 
 async function lookupReg() {
@@ -120,7 +123,6 @@ async function submitEnquiry() {
     form.reg = form.reg.trim();
     form.issue = form.issue.trim();
     form.postcode = form.postcode.trim();
-    form.preferredDate = form.preferredDate.trim();
 
     const res = await fetch("/api/enquiry", {
       method: "POST",

@@ -47,10 +47,9 @@ Car reg: ${reg}
 Make/model: ${makeModel}
 Issue: ${body.issue}
 Postcode: ${body.postcode}
-Preferred date/time: ${body.preferredDate}
 `;
 
-    const phone = "447584650089";
+    const phone = "447850257756";
 
     const whatsappUrl =
       `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
